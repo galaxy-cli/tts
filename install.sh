@@ -1,14 +1,11 @@
 #!/bin/bash
-#
-#       | |_| |_ ___   ___| |__   | |__  _   _    __ _  __ _| | __ ___  ___   _        ___| (_)
-#       | __| __/ __| / __| '_ \  | '_ \| | | |  / _` |/ _` | |/ _` \ \/ / | | |_____ / __| | |
-#       | |_| |_\__ \_\__ \ | | | | |_) | |_| | | (_| | (_| | | (_| |>  <| |_| |_____| (__| | |
-#        \__|\__|___(_)___/_| |_| |_.__/ \__, |  \__, |\__,_|_|\__,_/_/\_\\__, |      \___|_|_|
-#                                        |___/   |___/                    |___/
+#       | |_| |_ ___   ___| |__ 
+#       | __| __/ __| / __| '_ \ 
+#       | |_| |_\__ \_\__ \ | | |
+#        \__|\__|___(_)___/_| |_| 
 # https://github.com/galaxey-cli/tts
 # tts.sh - Simple text-to-speech utility using Festival and optional GPT integration
 
-# Updates repos and installs relevant packages for tts.sh
 sudo apt update
 sudo apt install -y festival xsel git
 
