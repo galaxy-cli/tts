@@ -1,6 +1,6 @@
 # SETUP
-* Use chmod u+x tts.sh to make the script executable
-* Use ./tts.sh to run script
+* Use `chmod u+x tts.sh` to make the script executable
+* Use `./tts.sh` to run script
 
 # USAGE
 > `./tts.sh -x`
