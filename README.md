@@ -1,6 +1,3 @@
-# tts.sh
-Simple text-to-speech utility using Festival and optional GPT integration
-
 ## USAGE
 > `./tts.sh -x`
 > `./tts.sh -o FILE`
