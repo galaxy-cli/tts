@@ -12,11 +12,11 @@ Simple text-to-speech utility using Festival and optional GPT integration
   Speak output from tgpt
 
 ## FLAGS:
-* -x
-  Use clipboard (xsel)
-* -o
-  Open and speak a file
-* -e
-  Echo user input
-* -t
-  Use tgpt output
+* `-x`
+Use clipboard (xsel)
+* `-o`
+Open and speak a file
+* `-e`
+Echo user input
+* `-t`
+Use tgpt output
