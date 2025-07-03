@@ -8,7 +8,8 @@
 # https://github.com/galaxey-cli/tts
 # tts.sh - Simple text-to-speech utility using Festival and optional GPT integration
 
-# Installs relevant packages for tts.sh
+# Updates repos and installs relevant packages for tts.sh
+sudo apt update
 sudo apt install -y festival xsel git
 
 # Check if tgpt directory exists before cloning and installing
