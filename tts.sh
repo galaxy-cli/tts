@@ -1,43 +1,61 @@
 #!/bin/bash
-############
-#          #
-#  tts.sh  #
-#          #
-############
 
-#
-# TTS SPEED
-#
+| |_| |_ ___   ___| |__   | |__  _   _    __ _  __ _| | __ ___  ___   _        ___| (_)
+| __| __/ __| / __| '_ \  | '_ \| | | |  / _` |/ _` | |/ _` \ \/ / | | |_____ / __| | |
+| |_| |_\__ \_\__ \ | | | | |_) | |_| | | (_| | (_| | | (_| |>  <| |_| |_____| (__| | |
+ \__|\__|___(_)___/_| |_| |_.__/ \__, |  \__, |\__,_|_|\__,_/_/\_\\__, |      \___|_|_|
+                                 |___/   |___/                    |___/
+# https://github.com/galaxey-cli/tts
+# tts.sh - Simple text-to-speech utility using Festival and optional GPT integration
+
+# Dependency checks
+command -v festival >/dev/null 2>&1 || { echo "festival not found"; exit 1; }
+
+# Edit Festival speed by changing Duration_Stretch in:
 # /usr/share/festival/voices/english/kal_diphone/festvox/kal_diphone.scm
-#
-# Line 265 (Parameter.set 'Duration_Stretch 0.8)
-#
+# Line 265: (Parameter.set 'Duration_Stretch 0.8)
 
-traptts(){
+print_usage() {
+    cat <<EOF
+USAGE:
+  ./tts.sh -x           # Speak clipboard contents
+  ./tts.sh -o FILE      # Speak contents of FILE
+  ./tts.sh -e           # Speak user input (one line)
+  ./tts.sh -t           # Speak output from tgpt
 
-	trap "rm -f tts" INT EXIT
-
+FLAGS:
+  -x    Use clipboard (xsel)
+  -o    Open and speak a file
+  -e    Echo user input
+  -t    Use tgpt output
+EOF
 }
 
-case "$1" in
+# Storages temporary script files in /tmp/
+tmpfile=$(mktemp /tmp/tts.XXXXXX)
+trap 'rm -f "$tmpfile"' INT EXIT
 
-	-x) xsel | festival --tts ;;
+speak_clipboard() {
+	xsel | festival --tts
+}
+speak_file() {
+	open "$1" && festival --tts < "$1"
+}
+speak_input() {
+	read -r tts
+	echo "$tts" | festival --tts
+}
+speak_tgpt() {
+	command -v tgpt >/dev/null 2>&1 || { echo "tgpt not found"; exit 1; }
+	tgpt > "$tmpfile"
+	open "$tmpfile"
+	festival --tts "$tmpfile"
+}
 
-	-o) open "$2" && festival --tts < "$2" ;;
-
-	-e) read -r tts; echo "$tts" | festival --tts ;;
-
-	-t) traptts; tgpt > tts; open tts; festival --tts tts ;;
-
-	*)
-		printf "USAGE:\n"
-
-		printf "tts -x [XSEL]\n"
-
-		printf "tts -o [OPEN FILE]\n"
-
-		printf "tts -e [ECHO]\n"
-
-		printf "tts -t [TGPT]\n"
-
+case "${1:-}" in
+    -x) speak_clipboard ;;
+    -o) speak_file "${2:-}" ;;
+    -e) speak_input ;;
+    -t) speak_tgpt ;;
+    *)  print_usage ;;
 esac
