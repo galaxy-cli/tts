@@ -1,10 +1,11 @@
+  GNU nano 7.2                                                     tts.sh                                                               
 #!/bin/bash
-
-| |_| |_ ___   ___| |__   | |__  _   _    __ _  __ _| | __ ___  ___   _        ___| (_)
-| __| __/ __| / __| '_ \  | '_ \| | | |  / _` |/ _` | |/ _` \ \/ / | | |_____ / __| | |
-| |_| |_\__ \_\__ \ | | | | |_) | |_| | | (_| | (_| | | (_| |>  <| |_| |_____| (__| | |
- \__|\__|___(_)___/_| |_| |_.__/ \__, |  \__, |\__,_|_|\__,_/_/\_\\__, |      \___|_|_|
-                                 |___/   |___/                    |___/
+#
+#       | |_| |_ ___   ___| |__   | |__  _   _    __ _  __ _| | __ ___  ___   _        ___| (_)
+#       | __| __/ __| / __| '_ \  | '_ \| | | |  / _` |/ _` | |/ _` \ \/ / | | |_____ / __| | |
+#       | |_| |_\__ \_\__ \ | | | | |_) | |_| | | (_| | (_| | | (_| |>  <| |_| |_____| (__| | |
+#        \__|\__|___(_)___/_| |_| |_.__/ \__, |  \__, |\__,_|_|\__,_/_/\_\\__, |      \___|_|_|
+#                                        |___/   |___/                    |___/
 # https://github.com/galaxey-cli/tts
 # tts.sh - Simple text-to-speech utility using Festival and optional GPT integration
 
@@ -17,13 +18,13 @@ command -v festival >/dev/null 2>&1 || { echo "festival not found"; exit 1; }
 
 print_usage() {
     cat <<EOF
-USAGE:
+USAGE
   ./tts.sh -x           # Speak clipboard contents
   ./tts.sh -o FILE      # Speak contents of FILE
   ./tts.sh -e           # Speak user input (one line)
   ./tts.sh -t           # Speak output from tgpt
 
-FLAGS:
+FLAGS
   -x    Use clipboard (xsel)
   -o    Open and speak a file
   -e    Echo user input
@@ -36,20 +37,20 @@ tmpfile=$(mktemp /tmp/tts.XXXXXX)
 trap 'rm -f "$tmpfile"' INT EXIT
 
 speak_clipboard() {
-	xsel | festival --tts
+        xsel | festival --tts
 }
 speak_file() {
-	open "$1" && festival --tts < "$1"
+        open "$1" && festival --tts < "$1"
 }
 speak_input() {
-	read -r tts
-	echo "$tts" | festival --tts
+        read -r tts
+        echo "$tts" | festival --tts
 }
 speak_tgpt() {
-	command -v tgpt >/dev/null 2>&1 || { echo "tgpt not found"; exit 1; }
-	tgpt > "$tmpfile"
-	open "$tmpfile"
-	festival --tts "$tmpfile"
+        command -v tgpt >/dev/null 2>&1 || { echo "tgpt not found"; exit 1; }
+        tgpt > "$tmpfile"
+        open "$tmpfile"
+        festival --tts "$tmpfile"
 }
 
 case "${1:-}" in
