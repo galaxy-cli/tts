@@ -3,8 +3,51 @@
 #       | __| __/ __|
 #       | |_| |_\__ \
 #        \__|\__|___|
-# https://github.com/galaxey-cli/tts
 # tts - Simple text-to-speech utility using Festival and optional GPT integration
+# Author: galaxy-cli
+# Project: https://github.com/galaxy-cli/tts
+
+# --- Dependency Check & Install Section ---
+
+missing=()
+
+for cmd in festival xsel; do
+    command -v "$cmd" >/dev/null 2>&1 || missing+=("$cmd")
+done
+
+# Check for tgpt (special case: directory and command)
+if ! command -v tgpt >/dev/null 2>&1; then
+    missing+=("tgpt")
+fi
+
+if [ "${#missing[@]}" -gt 0 ]; then
+    echo "The following dependencies are missing: ${missing[*]}"
+    read -p "Do you want to install them now? [Y/n] " yn
+    yn=${yn:-Y}
+    if [[ $yn =~ ^[Yy]$ ]]; then
+        sudo apt update
+        # Install system packages
+        for pkg in festival xsel; do
+            if [[ " ${missing[*]} " == *" $pkg "* ]]; then
+                sudo apt install -y "$pkg"
+            fi
+        done
+        # Install tgpt if missing
+        if [[ " ${missing[*]} " == *" tgpt "* ]]; then
+            if [ -d tgpt ]; then
+                echo "tgpt directory already exists. Skipping clone."
+            else
+                git clone https://github.com/aandrew-me/tgpt.git
+                sh tgpt/install
+            fi
+        fi
+    else
+        echo "Cannot continue without required dependencies."
+        exit 1
+    fi
+fi
+
+# --- Main Script Section ---
 
 # Edit Festival speed by changing Duration_Stretch in:
 # /usr/share/festival/voices/english/kal_diphone/festvox/kal_diphone.scm
@@ -26,25 +69,23 @@ FLAGS
 EOF
 }
 
-# Storages temporary script files in /tmp/
+# Stores temporary script files in /tmp/
 tmpfile=$(mktemp /tmp/tts.XXXXXX)
 trap 'rm -f "$tmpfile"' INT EXIT
 
 speak_clipboard() {
-        xsel | festival --tts
+    xsel | festival --tts
 }
 speak_file() {
-        open "$1" && festival --tts < "$1"
+    festival --tts < "$1"
 }
 speak_input() {
-        read -r tts
-        echo "$tts" | festival --tts
+    read -r tts
+    echo "$tts" | festival --tts
 }
 speak_tgpt() {
-        command -v tgpt >/dev/null 2>&1 || { echo "tgpt not found"; exit 1; }
-        tgpt > "$tmpfile"
-        open "$tmpfile"
-        festival --tts "$tmpfile"
+    tgpt > "$tmpfile"
+    festival --tts "$tmpfile"
 }
 
 case "${1:-}" in
