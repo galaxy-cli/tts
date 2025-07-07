@@ -1,10 +1,10 @@
 #!/bin/bash
-#       | |_| |_ ___   ___| |__ 
-#       | __| __/ __| / __| '_ \ 
-#       | |_| |_\__ \_\__ \ | | |
-#        \__|\__|___(_)___/_| |_| 
+#       | |_| |_ ___
+#       | __| __/ __|
+#       | |_| |_\__ \
+#        \__|\__|___|
 # https://github.com/galaxey-cli/tts
-# tts.sh - Simple text-to-speech utility using Festival and optional GPT integration
+# tts - Simple text-to-speech utility using Festival and optional GPT integration
 
 sudo apt update
 sudo apt install -y festival xsel git

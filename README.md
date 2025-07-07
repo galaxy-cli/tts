@@ -1,12 +1,12 @@
 # SETUP
-* Use `chmod u+x tts.sh` to make the script executable
-* Use `./tts.sh` to run script
+* Use `chmod u+x tts` to make the script executable
+* Use `./tts` to run script
 
 # USAGE
-> `./tts.sh -x`
-> `./tts.sh -o FILE`
-> `./tts.sh -e`
-> `./tts.sh -t`
+> `tts -x`
+> `tts -o FILE`
+> `tts -e`
+> `tts -t`
 
 # FLAGS
 -  `-x`    Use clipboard (xsel)
