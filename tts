@@ -6,9 +6,6 @@
 # https://github.com/galaxey-cli/tts
 # tts - Simple text-to-speech utility using Festival and optional GPT integration
 
-# Dependency checks
-command -v festival >/dev/null 2>&1 || { echo "festival not found"; exit 1; }
-
 # Edit Festival speed by changing Duration_Stretch in:
 # /usr/share/festival/voices/english/kal_diphone/festvox/kal_diphone.scm
 # Line 265: (Parameter.set 'Duration_Stretch 0.8)
@@ -16,10 +13,10 @@ command -v festival >/dev/null 2>&1 || { echo "festival not found"; exit 1; }
 print_usage() {
     cat <<EOF
 USAGE
-  ./tts.sh -x           # Speak clipboard contents
-  ./tts.sh -o FILE      # Speak contents of FILE
-  ./tts.sh -e           # Speak user input (one line)
-  ./tts.sh -t           # Speak output from tgpt
+  tts -x           Speak clipboard contents
+  tts -o FILE      Speak contents of FILE
+  tts -e           Speak user input (one line)
+  tts -t           Speak output from tgpt
 
 FLAGS
   -x    Use clipboard (xsel)
