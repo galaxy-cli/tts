@@ -9,6 +9,6 @@
 >  `tts --tgpt`
 # FLAGS
 -  `--cursor 	Use clipboard (xsel)`
--  `--file 	Use file`
--  `--user 	Echo user input`
--  `--tgpt 	Use tgpt output`
+-  `--file 	  Use file`
+-  `--user 	  Echo user input`
+-  `--tgpt 	  Use tgpt output`
