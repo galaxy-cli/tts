@@ -56,16 +56,15 @@ fi
 print_usage() {
     cat <<EOF
 USAGE
-  tts -x           Speak clipboard contents
-  tts -o FILE      Speak contents of FILE
-  tts -e           Speak user input (one line)
-  tts -t           Speak output from tgpt
-
+  tts --cursor
+  tts --file	FILE
+  tts --user
+  tts --tgpt
 FLAGS
-  -x    Use clipboard (xsel)
-  -o    Open and speak a file
-  -e    Echo user input
-  -t    Use tgpt output
+  --cursor	Use clipboard (xsel)
+  --file	Use file
+  --user	Echo user input
+  --tgpt	Use tgpt output
 EOF
 }
 
@@ -89,9 +88,9 @@ speak_tgpt() {
 }
 
 case "${1:-}" in
-    -x) speak_clipboard ;;
-    -o) speak_file "${2:-}" ;;
-    -e) speak_input ;;
-    -t) speak_tgpt ;;
+    --cursor) speak_clipboard ;;
+    --file) speak_file "${2:-}" ;;
+    --user) speak_input ;;
+    --tgpt) speak_tgpt ;;
     *)  print_usage; exit 0 ;;
 esac

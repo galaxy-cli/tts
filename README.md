@@ -3,13 +3,12 @@
 * Use `./tts` to run script
 
 # USAGE
-> `tts -x`
-> `tts -o FILE`
-> `tts -e`
-> `tts -t`
-
+>  `tts --cursor`
+>  `tts --file	FILE`
+>  `tts --user`
+>  `tts --tgpt`
 # FLAGS
--  `-x`    Use clipboard (xsel)
--  `-o`    Open and speak a file
--  `-e`    Echo user input
--  `-t`    Use tgpt output
+-  `--cursor	Use clipboard (xsel)`
+-  `--file	Use file`
+-  `--user	Echo user input`
+-  `--tgpt	Use tgpt output`
