@@ -56,12 +56,12 @@ fi
 print_usage() {
     cat <<EOF
 USAGE
-  tts --cursor
+  tts --clip
   tts --file	FILE
   tts --user
   tts --tgpt
 FLAGS
-  --cursor	Use clipboard (xsel)
+  --clip	Use clipboard (xsel)
   --file	Use file
   --user	Echo user input
   --tgpt	Use tgpt output
@@ -88,7 +88,7 @@ speak_tgpt() {
 }
 
 case "${1:-}" in
-    --cursor) speak_clipboard ;;
+    --clip) speak_clipboard ;;
     --file) speak_file "${2:-}" ;;
     --user) speak_input ;;
     --tgpt) speak_tgpt ;;
