@@ -119,11 +119,11 @@ if [[ -z "$text" ]]; then
             read -r text
             ;;
         tgpt)
-            tmpfile=$(mktemp /tmp/tts.XXXXXX)
-            trap 'rm -f "$tmpfile"' INT EXIT
-            tgpt > "$tmpfile"
-            text="$(cat "$tmpfile")"
-            ;;
+	    output="tts_tgpt_output"
+	    trap "rm -f $output" INT EXIT
+	    tgpt > "$output"
+	    text="$(open $output && tts --file $output && rm $output)"
+	    ;;
         *)
             print_usage
             exit 1
