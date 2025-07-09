@@ -56,41 +56,87 @@ fi
 print_usage() {
     cat <<EOF
 USAGE
-  tts --clip
-  tts --file	FILE
-  tts --user
-  tts --tgpt
+  tts --clip [--speed NUM]
+  tts --file FILE [--speed NUM]
+  tts --user [--speed NUM]
+  tts --tgpt [--speed NUM]
+  tts --speed NUM "text to say"
 FLAGS
-  --clip	Use clipboard (xsel)
-  --file	Use file
-  --user	Echo user input
-  --tgpt	Use tgpt output
+  --clip        Use clipboard (xsel)
+  --file        Use file
+  --user        Echo user input
+  --tgpt        Use tgpt output
+  --speed       Changes text-to-speech speed
 EOF
 }
 
-# Stores temporary script files in /tmp/
-tmpfile=$(mktemp /tmp/tts.XXXXXX)
-trap 'rm -f "$tmpfile"' INT EXIT
+# --- Option parsing ---
+input_source=""
+file_name=""
+speed=""
+text=""
 
-speak_clipboard() {
-    xsel | festival --tts
-}
-speak_file() {
-    festival --tts < "$1"
-}
-speak_input() {
-    read -r tts
-    echo "$tts" | festival --tts
-}
-speak_tgpt() {
-    tgpt > "$tmpfile"
-    festival --tts "$tmpfile"
-}
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --clip)
+            input_source="clip"
+            shift
+            ;;
+        --file)
+            input_source="file"
+            file_name="$2"
+            shift 2
+            ;;
+        --user)
+            input_source="user"
+            shift
+            ;;
+        --tgpt)
+            input_source="tgpt"
+            shift
+            ;;
+        --speed)
+            speed="$2"
+            shift 2
+            ;;
+        *)
+            # Any remaining arguments are treated as text to say
+            text="$*"
+            break
+            ;;
+    esac
+done
 
-case "${1:-}" in
-    --clip) speak_clipboard ;;
-    --file) speak_file "${2:-}" ;;
-    --user) speak_input ;;
-    --tgpt) speak_tgpt ;;
-    *)  print_usage; exit 0 ;;
-esac
+# --- Get text from selected source ---
+if [[ -z "$text" ]]; then
+    case "$input_source" in
+        clip)
+            text="$(xsel)"
+            ;;
+        file)
+            text="$(cat "$file_name")"
+            ;;
+        user)
+            read -r text
+            ;;
+        tgpt)
+            tmpfile=$(mktemp /tmp/tts.XXXXXX)
+            trap 'rm -f "$tmpfile"' INT EXIT
+            tgpt > "$tmpfile"
+            text="$(cat "$tmpfile")"
+            ;;
+        *)
+            print_usage
+            exit 1
+            ;;
+    esac
+fi
+
+# --- Speak with or without speed ---
+escaped_text=$(printf '%s' "$text" | sed 's/"/\\"/g')
+
+if [[ -n "$speed" ]]; then
+    echo "(Parameter.set 'Duration_Stretch $speed) (SayText \"$escaped_text\")" | festival --pipe
+else
+    echo "$text" | festival --tts
+fi
