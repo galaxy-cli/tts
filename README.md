@@ -12,4 +12,4 @@
 -  `--file        Use file`
 -  `--user        Echo user input`
 -  `--tgpt        Use tgpt output`
--  `--speed       Changes text-to-speech speed`
+-  `--speed       Set TTS speed (Festival Duration_Stretch, e.g. 0.5 = faster, 1.5 = slower)`
