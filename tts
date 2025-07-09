@@ -49,7 +49,7 @@ fi
 
 # --- Main Script Section ---
 
-# Edit Festival speed by changing Duration_Stretch in:
+# Edit Festival default speed by changing Duration_Stretch in:
 # /usr/share/festival/voices/english/kal_diphone/festvox/kal_diphone.scm
 # Line 265: (Parameter.set 'Duration_Stretch 0.8)
 
