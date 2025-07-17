@@ -11,7 +11,7 @@
 
 missing=()
 
-for cmd in festival xsel; do
+for cmd in git festival xsel; do
     command -v "$cmd" >/dev/null 2>&1 || missing+=("$cmd")
 done
 
