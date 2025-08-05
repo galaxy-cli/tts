@@ -10,7 +10,6 @@ A simple and lightweight **Text-to-Speech (TTS) utility** using [Festival](http:
 - Supports multiple input sources:
   - Clipboard (`--clip`)
   - Text file (`--file FILE`)
-  - Direct typed text (`--text`)
   - Output from `tgpt` command (`--tgpt`)
 - Adjustable speech speed using Festival's `Duration_Stretch` parameter (`--speed NUM`)
 - Automatic dependency check with optional installation prompt (Debian-based systems)
@@ -48,7 +47,6 @@ sh tgpt/install
 | ------------- | --------------------------------------------------------------------------------------------------|
 | `--clip`      | Use clipboard content as input                                                                     |
 | `--file FILE` | Use the content of a text file as input                                                           |
-| `--text`      | Read typed text input interactively                                                                |
 | `--tgpt`      | Use output from the `tgpt` command                                                                 |
 | `--speed NUM` | Set speech speed (`Duration_Stretch` parameter for Festival). `0.5` = faster, `1.5` = slower       |
 | `--help`      | Show this help message                                                                              |
@@ -66,10 +64,6 @@ sh tgpt/install
 - Speak output from tgpt at faster speed (speed 0.8):
 
 `tts --tgpt --speed 0.8`
-
-- Speak typed text directly:
-
-`tts --text`
 
 - Speak custom text passed as arguments:
 

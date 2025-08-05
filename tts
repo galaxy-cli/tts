@@ -55,11 +55,9 @@ USAGE
   tts --clip [--speed NUM]
   tts --file FILE [--speed NUM]
   tts --tgpt [--speed NUM]
-  tts [--speed NUM] --text
 FLAGS
   --clip        Use clipboard (xsel)
   --file        Use file
-  --text        Echo text input
   --tgpt        Use tgpt output
   --speed       Set TTS speed (Festival Duration_Stretch, e.g. 0.5= faster, 1.5= slower)
   --help        Show this help message
@@ -67,10 +65,10 @@ EOF
 }
 
 # --- Option Parsing ---
+
 input_source=""
 file_name=""
 speed=""
-text=""
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -86,10 +84,6 @@ while [[ $# -gt 0 ]]; do
             input_source="file"
             file_name="$2"
             shift 2
-            ;;
-        --text)
-            input_source="text"
-            shift
             ;;
         --tgpt)
             input_source="tgpt"
@@ -113,58 +107,54 @@ while [[ $# -gt 0 ]]; do
             exit 0
             ;;
         *)
-            # Treat remaining arguments as text
-            text="$*"
-            break
-            ;;
-    esac
-done
-
-# --- Retrieve text based on input source ---
-
-if [[ -z "$text" ]]; then
-    case "$input_source" in
-        clip)
-            text="$(xsel --clipboard || true)"
-            if [[ -z "$text" ]]; then
-                echo "Clipboard is empty."
-                exit 1
-            fi
-            ;;
-        file)
-            if [[ ! -f "$file_name" || ! -r "$file_name" ]]; then
-                echo "Error: Cannot read file '$file_name'."
-                exit 1
-            fi
-            text="$(cat "$file_name")"
-            ;;
-        text)
-            echo "$text" | festival --tts
-            if [[ -z "$text" ]]; then
-                echo "No input provided."
-                exit 1
-            fi
-            ;;
-        tgpt)
-            output=$(mktemp)
-            trap "rm -f '$output'" EXIT
-            if ! tgpt > "$output"; then
-                echo "Error: Failed to run tgpt."
-                exit 1
-            fi
-            text="$(<"$output")"
-            if [[ -z "$text" ]]; then
-                echo "tgpt returned no text."
-                exit 1
-            fi
-            ;;
-        *)
-            echo "Error: No valid input source specified."
             print_usage
             exit 1
             ;;
     esac
+done
+
+# --- Require valid input source flag ---
+if [[ -z "$input_source" ]]; then
+    print_usage
+    exit 1
 fi
+
+# --- Retrieve text based on input source ---
+
+case "$input_source" in
+    clip)
+        text="$(xsel --clipboard || true)"
+        if [[ -z "$text" ]]; then
+            echo "Clipboard is empty."
+            exit 1
+        fi
+        ;;
+    file)
+        if [[ ! -f "$file_name" || ! -r "$file_name" ]]; then
+            echo "Error: Cannot read file '$file_name'."
+            exit 1
+        fi
+        text="$(cat "$file_name")"
+        ;;
+    tgpt)
+        output=$(mktemp)
+        trap "rm -f '$output'" EXIT
+        if ! tgpt > "$output"; then
+            echo "Error: Failed to run tgpt."
+            exit 1
+        fi
+        text="$(<"$output")"
+        if [[ -z "$text" ]]; then
+            echo "tgpt returned no text."
+            exit 1
+        fi
+        ;;
+    *)
+        echo "Error: No valid input source specified."
+        print_usage
+        exit 1
+        ;;
+esac
 
 # --- Prepare and execute TTS ---
 
